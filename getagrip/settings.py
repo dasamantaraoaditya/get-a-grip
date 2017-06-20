@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'tu92a^mz6^l#og%qbj+m0&d$m7#c)v0go95^4lzq@xs#8)$6+('
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['.getagrip69.herokuapp.com','127.0.0.1','*']
 
