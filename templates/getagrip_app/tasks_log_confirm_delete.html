@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Delete post</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <title>Delete Task</title>
+    <script>
+        $(document).ready(function () {
+
+        });
+        var tasks_list = [
+            {% for task in tasks_log_list %}
+                {
+                    id: "{{ task.id }}",
+                    title: "{{ task.title }}",
+                    deadline: "{{ task.deadline|date:"Y-m-d G:i:s" }}",
+                    date: "{{ task.date|date:"Y-m-d G:i:s"  }}",
+                    state: "{{ task.state}}",
+                    type: "{{ task.type}}",
+                    createdBy: "{{ task.createdBy_id}}"
+                },
+            {% endfor %}
+        ];
+        var assigneed_tasks = [
+            {% for assignees in assigneed_tasks%}
+                {
+                    id: "{{ assignees.task.id }}",
+                    title: "{{ assignees.task.title }}",
+                    createdBy: "{{ assignees.task.createdBy.username}}"
+                },
+            {% endfor %}
+        ];
+
+        function filterData() {
+            var list = $('.task-block');
+            var filter = $('#filter-data').val();
+            for (i = 0; i < list.length; i++) {
+                var name = list[i].getElementsByTagName("h4")[0];
+                if (name.innerHTML.toUpperCase().indexOf(filter.toUpperCase()) > -1) {
+                    list[i].style.display = "";
+                } else {
+                    list[i].style.display = "none";
+                }
+            }
+        }
+        function getPercent(i) {
+            var deadLine = new Date(tasks_list[i].deadline);
+            deadLine = deadLine.getTime();
+            var createdOn = new Date(tasks_list[i].date);
+            createdOn = createdOn.getTime();
+            var today = new Date();
+            today = today.getTime();
+            var percent = ((today - createdOn) / (deadLine - createdOn)) * 100;
+            if (percent < 0 || percent > 100)
+                percent = 100;
+
+            percent = Math.round(percent);
+            return percent;
+        }
+        function populateAlerts() {
+
+            var allAlerts = "";
+            for (var i = 0; i < tasks_list.length; i++) {
+                var percent = getPercent(i);
+                if (percent > 90)
+                    allAlerts += '<li><a href=/getagrip/' + tasks_list[i].id + '/><div><strong class="">' + tasks_list[i].title +
+                            '</strong></div><div class="progress-bar progress-bar-striped active" id="' + tasks_list[i].id + '-progress-bar" role="progressbar"' +
+                            'aria-valuenow="' + percent + '" aria-valuemin="0" aria-valuemax="100" style="width:' + percent + '%">' + percent +
+                            '%</div></a></li>'
+            }
+            $('#alerts').slideToggle("slow");
+            if (allAlerts == "")
+                $('#alerts')[0].innerHTML = "No Alerts";
+            else
+                $('#alerts')[0].innerHTML = allAlerts;
+        }
+        function populateMessages() {
+
+            var allMessages = "";
+            for (var i = 0; i < assigneed_tasks.length; i++) {
+                allMessages += '<li><a href=/getagrip/' + assigneed_tasks[i].id + '/>' +
+                        '<div><img src="http://www.iconskid.com/images/60/it-support-correct-group-60914.png" alt="Person" class="img-circle" width="20" height="20">' + assigneed_tasks[i].createdBy +
+                        '</div><div><strong class="">' + assigneed_tasks[i].title + '</strong></div></a></li>'
+            }
+            $('#messages').slideToggle("slow");
+            if (allMessages == "")
+                $('#messages')[0].innerHTML = "No Messages";
+            else
+                $('#messages')[0].innerHTML = allMessages;
+        }
+
+        function fillProgressBars() {
+            for (var i = 0; i < tasks_list.length; i++) {
+                var percent = getPercent(i);
+                var bar = '<div class="progress-bar progress-bar-striped active" role="progressbar"' +
+                        'aria-valuenow="' + percent + '" aria-valuemin="0" aria-valuemax="100" style="width:' + percent + '%">' + percent + '%</div>';
+                $("#" + tasks_list[i].id + "-progress-bar")[0].innerHTML = bar;
+            }
+        }
+        $(document).ready(function () {
+            var movementStrength = 20;
+            var height = movementStrength / $(window).height();
+            var width = movementStrength / $(window).width();
+            $("body").mousemove(function (e) {
+                var pageX = e.pageX - ($(window).width() / 2);
+                var pageY = e.pageY - ($(window).height() / 2);
+                var newvalueX = width * pageX * -1 - 20;
+                var newvalueY = height * pageY * -1 - 20;
+                $('body').css("background-position", newvalueX + "px     " + newvalueY + "px");
+            });
+        });
+    </script>
+    <style>
+        .need-help {
+            background-color: rgba(55, 1, 9, 0.11);
+        }
+
+        .todo {
+            background-color: rgba(22, 22, 22, 0.02);
+        }
+
+        .progress {
+            height: 5px;
+        }
+
+        .progress:hover {
+            height: 20px;
+        }
+    </style>
+
+</head>
+<body style="background-image: url('http://pavinstallations.com/Site/graphics/inner-background-themed.png?no-min&x');background-repeat: no-repeat;background-size: cover;">
+
+<div class="container">
+    <nav class="navbar navbar-fixed-top navbar-light">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/getagrip/userTasks/">
+                    <img alt="Get-A-Grip" src="https://www.iconfinder.com/data/icons/objects/512/grip-512.png"
+                         style="width: 25px;height: 25px">
+                </a>
+                <h3 class="navbar-text navbar-right"><strong>Get-A-Grip</strong></h3>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/getagrip/userTasks/">
+                        <strong class="faa-parent animated-hover"><i
+                                class='fa fa-bookmark-o faa-wrench'></i>Home</strong>
+                    </a>
+                </li>
+                <li onclick="populateAlerts()">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">
+                        <strong class="faa-parent animated-hover"><i class='fa fa-bell-o faa-ring'></i>Alerts</strong>
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" id="alerts" style="display: none;overflow:scroll;height:250px;">
+
+                    </ul>
+                </li>
+                <li onclick="populateMessages()">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">
+                        <strong class="faa-parent animated-hover"><i
+                                class='fa fa-envelope-o faa-shake'></i>Messages</strong>
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" id="messages" style="display: noneoverflow:scroll;height:250px;">
+
+                    </ul>
+                </li>
+                <li class="dropdown" onclick="$('#log-menu').slideToggle('slow')">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">
+                        <strong class="faa-parent animated-hover"><i class='fa fa-user-o faa-flash'></i>profilo</strong>
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" id="log-menu">
+                        <li>
+                            <a href="/users/{{ request.user.id }}/">
+                                <strong class="">View Your profile</strong>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/getagrip/help/">
+                                <strong class="">Help</strong>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/getagrip/help/">
+                                <strong class="">Feed Back</strong>
+                            </a>
+                        </li>
+                        <li role="separator" class="divider"></li>
+                        <li class="">
+                            <a href="/Logout/">
+                                <strong class="">Logout</strong>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+<br><br><br>
+
+<div class="container center-block">
+    <div class="panel panel-danger">
+        <div class="panel panel-heading"><h2><strong>Deleting Task</strong></h2></div>
+        <form action="" method="post">{% csrf_token %}
+            <div class="panel panel-body panel-warning text-center text-info"><h3>A Deleted Task Cannot Be Restored
+                !<br>Are
+                you sure to delete - -<b>"{{ object }}"</b> - -?</h3>
+                <input type="submit" value="Confirm-Delete" class="btn-lg btn-danger pull-left"/>
+                <a href="/getagrip/userTasks"><input type="button" value="Cancel"
+                                                     class="btn-lg btn-info pull-right"/></a>
+            </div>
+        </form>
+        <div class="panel-footer">
+            Once The Task Is Deleted The Related SubTasks Will Also Get Deleted!
+        </div>
+    </div>
+</div>
+</body>
+</html>

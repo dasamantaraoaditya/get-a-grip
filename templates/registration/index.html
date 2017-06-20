@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome-animation/0.0.10/font-awesome-animation.css">
+    <script src="//cdn.ckeditor.com/4.7.0/basic/ckeditor.js"></script>
+    <link rel="icon" href="https://www.iconfinder.com/data/icons/objects/512/grip-512.png">
+
+    <title>Get-A-Grip</title>
+
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font: 400 15px/1.8 "Lato", sans-serif;
+            color: black;
+        }
+
+        h1 {
+            color: indigo;
+            text-shadow: 3px 3px slategrey;
+        }
+
+        h2 {
+            color: black;
+            text-shadow: 2px 2px slategrey;
+        }
+
+        h3 {
+            color: bisque;
+            text-shadow: 2px 2px slategrey;
+        }
+
+        p {
+            color: black;
+            text-shadow: 1px 1px slategrey;
+        }
+
+        a {
+            color: bisque;
+            text-shadow: 1px 1px slategrey;
+        }
+
+        .bgimg-1, .bgimg-2, .bgimg-3, .bgimg-4 {
+            position: relative;
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .bgimg-1 {
+            background-image: url("http://wallpapercave.com/wp/24bkzMN.jpg");
+            min-height: 100%;
+        }
+
+        .bgimg-2 {
+            background-image: url("https://qeryz-seohacker.netdna-ssl.com/blog/wp-content/uploads/2015/01/Survey-Scheduling.png");
+            min-height: 100%;
+        }
+
+        .bgimg-3 {
+            background-image: url("https://articulate-heroes.s3.amazonaws.com/uploads/rte/rztweqkn_E-Learning-101-Series--How-to-prioritize-tasks.png");
+            min-height: 100%;
+        }
+
+        .bgimg-4 {
+            background-image: url("http://www.hdelectriccompany.com/assets/images/rep-main-bg.jpg");
+            min-height: 100%;
+        }
+
+        /* Turn off parallax scrolling for tablets and phones */
+        @media only screen and (max-device-width: 1024px) {
+            .bgimg-1, .bgimg-2, .bgimg-3, .bgimg-4 {
+                background-attachment: scroll;
+            }
+        }
+    </style>
+
+</head>
+<body>
+<nav class="navbar navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand " href="/getagrip/userTasks/">
+                <img alt="Get-A-Grip" src="https://www.iconfinder.com/data/icons/objects/512/grip-512.png"
+                     style="width: 25px;height: 25px">
+            </a>
+            <h3 class="navbar-text navbar-right"><strong>Get-A-Grip</strong></h3>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            <li class="active"><a href="#getstarted" class="faa-parent animated-hover"><i class="fa fa-grav faa-flash"
+                                                                                  aria-hidden="true"></i>GetStarted</a>
+            </li>
+            <li><a href="#description" class="faa-parent animated-hover"><i class="fa fa-book faa-wrench" aria-hidden="true"></i>Description</a>
+            </li>
+            <li ><a href="#demo" class="faa-parent animated-hover" ><i class="faa-passing fa fa-braille "
+                                                                     aria-hidden="true"></i>Demo</a></li>
+            <li class=""><a href="#contact" class="faa-parent animated-hover"><i class="fa fa-phone faa-tada" aria-hidden="true"></i>Contact</a>
+            </li>
+            <li class=""><a href="/getagrip/help" class="animated-hover faa-parent "><i class="fa fa-heartbeat faa-ring"
+                                                                              aria-hidden="true"></i>Help</a></li>
+            <li class=""><a href="/login" class="faa-parent animated-hover"><i class="fa fa-user-secret faa-pulse" aria-hidden="true"></i>Login</a>
+            </li>
+            <li class=""><a href="/register" class="faa-parent animated-hover"><i class="faa-shake fa fa-arrow-right"
+                                                                         aria-hidden="true"></i>Sign-Up</a></li>
+        </ul>
+
+    </div>
+</nav>
+<div id="getstarted" class="bgimg-1">
+    <br><br><br><br><br>
+    <div class="container">
+        <div class="jumbotron">
+            <h1 class="display-3">Introducing <strong class="faa-parent animated-hover"><img
+                    src="https://www.iconfinder.com/data/icons/objects/512/grip-512.png" class="image-round faa-float"
+                    style="width: 8%">Get-A-Grip
+            </strong></h1>
+            <p>Want to manage Task's and resolve tasks based on DeadLines? <strong>Get-A-Grip</strong> makes your task
+                tracking system simpler and consistent.</p>
+            <hr class="my-4">
+            <p>One can manage task's and give states to a task based upon the progress. A task can further be Refined
+                into simpler modules named Sub-Tasks. A task can be Assigned to any Assignee Enrolled in Get-A-Grip
+                users Database. </p>
+            <p class="lead">
+                <a class="btn btn-info btn-lg faa-parent animated-hover" href="/login/" role="button">Login <i
+                        class="fa fa-user-secret faa-horizontal"></i></a>
+                <a class="btn btn-info btn-lg pull-right faa-parent animated-hover" href="/register/" role="button">Get
+                    Started <i
+                            class="fa fa-arrow-right faa-horizontal"></i></a>
+
+            </p>
+        </div>
+    </div>
+</div>
+
+<div id="description" class="bgimg-2">
+    <div class="container">
+        <h2>Manage Your Tasks</h2>
+        <div id="myCarousel" class="carousel slide" data-ride="carousel">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                <li data-target="#myCarousel" data-slide-to="1"></li>
+                <li data-target="#myCarousel" data-slide-to="2"></li>
+            </ol>
+
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner">
+                <div class="item active">
+                    <img src="https://www.officetimeline.com/Content/images/articles/PM-Task-Management/task-management-hero-banner.png"
+                         alt="Los Angeles" style="width:100%;">
+                    <h1>Create Tasks and Manage Them With Respect To DeadLines</h1>
+                    <pre>Maintain tasks by modifying te states of these tasks with respect to the current progress and have a grip of your task progress.</pre>
+                </div>
+                <div class="item">
+                    <img src="https://cdn.allwallpaper.in/wallpapers/1280x720/8608/star-wars-darth-vader-1280x720-wallpaper.jpg"
+                         alt="Chicago" style="width:100%;">
+                    <h1>Get Notified On Task DeadLine Approach</h1>
+                    <pre>Make a note of the task progress automatically by allowing notification on the task progress.</pre>
+                </div>
+                <div class="item">
+                    <img src="https://ioyby2hf25e3sg55t3muegr1-wpengine.netdna-ssl.com/wp-content/uploads/2015/10/motivational-quotes-1024x640.jpg"
+                         alt="New york" style="width:100%;">
+                    <h1>A Simple Approach of Work Flow With Assigning Assignees To Tasks.</h1>
+                    <pre>Allow assignees to work on a task. Make a task refined by creating sub-tasks.</pre>
+                </div>
+            </div>
+
+            <!-- Left and right controls -->
+            <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="right carousel-control" href="#myCarousel" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </div>
+</div>
+<div id="demo" class="bgimg-3">
+    <h2>Go Through The Navigation Demo In The Below Images .</h2>
+    <table class="table">
+        <tr>
+            <td><a target="_blank"
+                   href="https://content.screencast.com/users/dasamantarao.aditya/folders/Jing/media/62bcc348-c873-49e6-907a-55365c097c29/list-view.png"><img
+                    class="img-thumbnail"
+                    src="https://content.screencast.com/users/dasamantarao.aditya/folders/Jing/media/62bcc348-c873-49e6-907a-55365c097c29/list-view.png"></a>
+            </td>
+            <td><a target="_blank"
+                   href="https://content.screencast.com/users/dasamantarao.aditya/folders/Jing/media/7a052e29-e721-4d4c-bea7-9b1ea350ce86/task-form.png"><img
+                    class="img-thumbnail"
+                    src="https://content.screencast.com/users/dasamantarao.aditya/folders/Jing/media/7a052e29-e721-4d4c-bea7-9b1ea350ce86/task-form.png"></a>
+            </td>
+            <td><a target="_blank"
+                   href="https://content.screencast.com/users/dasamantarao.aditya/folders/Jing/media/c9532fc1-23ca-46dc-9015-1c75dd9eab21/list-view-tasks.png"><img
+                    class="img-thumbnail"
+                    src="https://content.screencast.com/users/dasamantarao.aditya/folders/Jing/media/c9532fc1-23ca-46dc-9015-1c75dd9eab21/list-view-tasks.png"></a>
+            </td>
+        </tr>
+        <tr>
+            <td><a target="_blank"
+                   href="https://content.screencast.com/users/dasamantarao.aditya/folders/Jing/media/96d4e110-abe8-4aa5-afd5-1de6deb156b6/detailed-task-1.png"><img
+                    class="img-thumbnail"
+                    src="https://content.screencast.com/users/dasamantarao.aditya/folders/Jing/media/96d4e110-abe8-4aa5-afd5-1de6deb156b6/detailed-task-1.png"></a>
+            </td>
+            <td><a target="_blank"
+                   href="https://content.screencast.com/users/dasamantarao.aditya/folders/Jing/media/461cff3f-01e4-431a-b72a-e136df33fb11/detailed-task-2.png"><img
+                    class="img-thumbnail"
+                    src="https://content.screencast.com/users/dasamantarao.aditya/folders/Jing/media/461cff3f-01e4-431a-b72a-e136df33fb11/detailed-task-2.png"></a>
+            </td>
+            <td><a target="_blank"
+                   href="https://content.screencast.com/users/dasamantarao.aditya/folders/Default/media/99a2b2b4-ae73-4245-bdb7-f8a17b8b8df6/user-profile.png"><img
+                    class="img-thumbnail"
+                    src="https://content.screencast.com/users/dasamantarao.aditya/folders/Default/media/99a2b2b4-ae73-4245-bdb7-f8a17b8b8df6/user-profile.png"></a>
+            </td>
+        </tr>
+    </table>
+</div>
+<div id="contact">
+    <div class="container-fluid bg-grey bgimg-4">
+        <h2 class="text-center">CONTACT</h2>
+        <div class="row">
+            <div class="col-sm-5">
+                <p>Contact us and we'll get back to you within 24 hours.</p>
+                <p><span class="glyphicon glyphicon-map-marker"></span><strong>Get-A-Grip, Inc.</strong><br>
+                    Indira Nagar, Gachibowli,<br>
+                    Hyderabad, Telangana 500032<br>
+                </p>
+                <p><span class="glyphicon glyphicon-phone"></span> +91 8978015596</p>
+                <p><span class="glyphicon glyphicon-envelope"></span> aditya.dasamantharao@gmail.com</p>
+            </div>
+            <div class="col-sm-7">
+                <form>
+                    <div class="row">
+                        <div class="col-sm-6 form-group">
+                            <input class="form-control" id="name" name="name" placeholder="Name" type="text" required>
+                        </div>
+                        <div class="col-sm-6 form-group">
+                            <input class="form-control" id="email" name="email" placeholder="Email" type="email"
+                                   required>
+                        </div>
+                    </div>
+                <textarea class="form-control" id="comments" name="comments" placeholder="Comment"
+                          rows="5"></textarea><br>
+                    <div class="row">
+                        <div class="col-sm-12 form-group">
+                            <button class="btn btn-default pull-right" type="submit">Send</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="footer">
+    <center>
+        <ul class="list-inline">
+            <li>
+                <a href="https://www.facebook.com/aditya.yoho" target="_blank" class="btn-social btn-outline faa-parent animated-hover"><span
+                        class="sr-only">Facebook</span><i
+                        class="fa fa-fw fa-facebook faa-tada"></i></a>
+            </li>
+            <li>
+                <a href="https://plus.google.com/u/0/105322279316056476229" target="_blank"
+                   class="btn-social btn-outline faa-parent animated-hover"><span class="sr-only">Google Plus</span><i
+                        class="fa fa-fw fa-google-plus faa-tada"></i></a>
+            </li>
+            <li>
+                <a href="https://github.com/dasamantaraoaditya" target="_blank" class="btn-social btn-outline faa-parent animated-hover"><span
+                        class="sr-only">GitHub</span><i
+                        class="fa fa-fw fa-github faa-tada"></i></a>
+            </li>
+            <li>
+                <a href="https://www.instagram.com/adityadasamantarao/" target="_blank"
+                   class="btn-social btn-outline faa-parent animated-hover"><span class="sr-only">Instagram</span><i
+                        class="fa fa-fw fa-instagram faa-tada"></i></a>
+            </li>
+            <li>
+                <a href="https://adityadasamantarao.wordpress.com/" target="_blank"
+                   class="btn-social btn-outline faa-parent animated-hover"><span class="sr-only">Dribble</span><i
+                        class="fa fa-fw fa-wordpress faa-tada"></i></a>
+            </li>
+        </ul>
+        Copyright © 2016 Aditya Dasamantharao. All rights reserved.
+
+    </center>
+</div>
+</div>
+</body>
+</html>

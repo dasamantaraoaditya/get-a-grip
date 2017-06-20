@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome-animation/0.0.10/font-awesome-animation.css">
+
+    <link rel="icon" href="https://www.iconfinder.com/data/icons/objects/512/grip-512.png">
+    <title>Get-A-Grip</title>
+    <style>
+        .card {
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            transition: 0.3s;
+            width: 40%;
+            border-radius: 5px;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        img {
+            border-radius: 5px 5px 0 0;
+        }
+
+        .container {
+            padding: 2px 16px;
+        }
+
+        .need-help {
+            background-color: rgba(55, 1, 9, 0.11);
+        }
+
+        .todo {
+            background-color: rgba(22, 22, 22, 0.02);
+        }
+
+        .progress {
+            height: 5px;
+        }
+
+        .progress:hover {
+            height: 20px;
+        }
+    </style>
+    <script>
+        var tasks_list = [
+            {% for task in tasks_log_list %}
+                {
+                    id: "{{ task.id }}",
+                    title: "{{ task.title }}",
+                    deadline: "{{ task.deadline|date:"Y-m-d G:i:s" }}",
+                    date: "{{ task.date|date:"Y-m-d G:i:s"  }}",
+                    state: "{{ task.state}}",
+                    type: "{{ task.type}}",
+                    createdBy: "{{ task.createdBy_id}}"
+                },
+            {% endfor %}
+        ];
+        var all_tasks_list = [
+            {% for task in task_objects %}
+                {
+                    id: "{{ task.id }}",
+                    title: "{{ task.title }}",
+                    deadline: "{{ task.deadline|date:"Y-m-d G:i:s" }}",
+                    date: "{{ task.date|date:"Y-m-d G:i:s"  }}",
+                    state: "{{ task.state}}",
+                    type: "{{ task.type}}",
+                    createdBy: "{{ task.createdBy_id}}"
+                },
+            {% endfor %}
+        ];
+        var assigneed_tasks = [
+            {% for assignees in assigneed_tasks%}
+                {
+                    id: "{{ assignees.task.id }}",
+                    title: "{{ assignees.task.title }}",
+                    createdBy: "{{ assignees.task.createdBy.username}}",
+                    userId: "{{ assignees.task.createdBy.id}}"
+                },
+            {% endfor %}
+        ];
+
+        var progressArray = [];
+        function filterData() {
+            var list = $('.task-block');
+            var filter = $('#filter-data').val();
+            for (i = 0; i < list.length; i++) {
+                var name = list[i].getElementsByTagName("h4")[0];
+                if (name.innerHTML.toUpperCase().indexOf(filter.toUpperCase()) > -1) {
+                    list[i].style.display = "";
+                } else {
+                    list[i].style.display = "none";
+                }
+            }
+        }
+        function getPercent(i) {
+            try {
+                var deadLine = new Date(tasks_list[i].deadline);
+                deadLine = deadLine.getTime();
+                var createdOn = new Date(tasks_list[i].date);
+                createdOn = createdOn.getTime();
+            }
+            catch (e) {
+                var deadLine = new Date(all_tasks_list[i].deadline);
+                deadLine = deadLine.getTime();
+                var createdOn = new Date(all_tasks_list[i].date);
+                createdOn = createdOn.getTime();
+            }
+            var today = new Date();
+            today = today.getTime();
+            var percent = ((today - createdOn) / (deadLine - createdOn)) * 100;
+            if (percent < 0 || percent > 100)
+                percent = 100;
+
+            percent = Math.round(percent);
+            return percent;
+        }
+        function populateAlerts() {
+
+            var allAlerts = "";
+            for (var i = 0; i < tasks_list.length; i++) {
+                var percent = getPercent(i);
+                if (percent > 90)
+                    allAlerts += '<li><a href=/getagrip/' + tasks_list[i].id + '/><div><strong class="">' + tasks_list[i].title +
+                            '</strong></div><div class="progress-bar progress-bar-striped active" id="' + tasks_list[i].id + '-progress-bar" role="progressbar"' +
+                            'aria-valuenow="' + percent + '" aria-valuemin="0" aria-valuemax="100" style="width:' + percent + '%">' + percent +
+                            '%</div></a></li>'
+            }
+            $('#alerts').slideToggle("slow");
+            if (allAlerts == "")
+                $('#alerts')[0].innerHTML = "No Alerts";
+            else
+                $('#alerts')[0].innerHTML = allAlerts;
+        }
+        function populateMessages() {
+
+            var allMessages = "";
+            for (var i = 0; i < assigneed_tasks.length; i++) {
+                allMessages += '<li><a href=/getagrip/' + assigneed_tasks[i].id + '/>' +
+                        '<div><img src="http://www.iconskid.com/images/60/it-support-correct-group-60914.png" alt="Person" class="img-circle" width="20" height="20">' + assigneed_tasks[i].createdBy +
+                        '</div><div><strong class="">' + assigneed_tasks[i].title + '</strong></div></a></li>'
+            }
+            $('#messages').slideToggle("slow");
+            if (allMessages == "")
+                $('#messages')[0].innerHTML = "No Messages";
+            else
+                $('#messages')[0].innerHTML = allMessages;
+        }
+
+        function fillProgressBars() {
+            for (var i = 0; i < all_tasks_list.length; i++) {
+                var percent = getPercent(i);
+                var bar = '<div class="progress-bar progress-bar-striped active" role="progressbar"' +
+                        'aria-valuenow="' + percent + '" aria-valuemin="0" aria-valuemax="100" style="width:' + percent + '%">' + percent + '%</div>';
+                try {
+                    $("#" + all_tasks_list[i].id + "-progress-bar")[0].innerHTML = bar;
+                } catch (ree) {
+                }
+            }
+        }
+        $(document).ready(function () {
+                    var workedWith = [];
+                    var workers = '';
+                    for (var i = 0; i < assigneed_tasks.length; i++) {
+                        if (workedWith.indexOf(assigneed_tasks[i].userId) < 0) {
+                            workers += '<a href="/users/' + assigneed_tasks[i].userId + '"><button type="button" class="list-group-item"> <div class="chip"><img src="http://www.iconskid.com/images/60/it-support-correct-group-60914.png" alt="Person" class="img-circle" width="30" height="30">' +
+                                    assigneed_tasks[i].createdBy + '</div></button></a>';
+                            workedWith.push(assigneed_tasks[i].userId)
+                        }
+                    }
+                    if (workers == '')workers = '<lable class="alert-success">No One Has Worked With You Till Date!</lable>'
+                    $("#workers")[0].innerHTML = workers;
+                    for (i = 0; i < tasks_list.length; i++)
+                        progressArray.push(getPercent(i));
+                    $(document).ready(function () {
+                                Highcharts.chart('container', {
+                                    chart: {
+                                        type: 'line'
+                                    },
+                                    title: {
+                                        text: 'Average Task Progress'
+                                    },
+                                    subtitle: {
+                                        text: 'Source: Get-A-Grip.com'
+                                    },
+                                    xAxis: {
+                                        title: {
+                                            text: 'Task-Count'
+                                        }
+                                    }, yAxis: {
+                                        title: {
+                                            text: 'Task-Progress'
+                                        }
+                                    },
+                                    plotOptions: {
+                                        line: {
+                                            dataLabels: {
+                                                enabled: true
+                                            },
+                                            enableMouseTracking: true
+                                        }
+                                    },
+                                    series: [{
+                                        name: 'Task-Progress',
+                                        data: progressArray
+                                    }, {
+                                        name: 'Task-Count',
+                                        data: progressArray.slice().reverse()
+                                    }]
+                                });
+                            }
+                    );
+                }
+        );
+        $(document).ready(function () {
+            var movementStrength = 20;
+            var height = movementStrength / $(window).height();
+            var width = movementStrength / $(window).width();
+            $("body").mousemove(function (e) {
+                var pageX = e.pageX - ($(window).width() / 2);
+                var pageY = e.pageY - ($(window).height() / 2);
+                var newvalueX = width * pageX * -1 - 20;
+                var newvalueY = height * pageY * -1 - 20;
+                $('body').css("background-position", newvalueX + "px     " + newvalueY + "px");
+            });
+        });
+    </script>
+
+</head>
+<body style="background-image: url('http://www.scottbatemanbengal.com/Site/graphics/inner-background-themed.png');background-repeat: no-repeat;background-size: cover;">
+
+
+<div class="container">
+    <nav class="navbar navbar-fixed-top navbar-light">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/getagrip/userTasks/">
+                    <img alt="Get-A-Grip" src="https://www.iconfinder.com/data/icons/objects/512/grip-512.png"
+                         style="width: 25px;height: 25px">
+                </a>
+                <h3 class="navbar-text navbar-right"><strong>Get-A-Grip</strong></h3>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/getagrip/userTasks/">
+                        <strong class="faa-parent animated-hover"><i
+                                class='fa fa-bookmark-o faa-wrench'></i>Home</strong>
+                    </a>
+                </li>
+                <li onclick="populateAlerts()">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">
+                        <strong class="faa-parent animated-hover"><i class='fa fa-bell-o faa-ring'></i>Alerts</strong>
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" id="alerts" style="display: none;overflow:scroll;height:250px;">
+
+                    </ul>
+                </li>
+                <li onclick="populateMessages()">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">
+                        <strong class="faa-parent animated-hover"><i
+                                class='fa fa-envelope-o faa-shake'></i>Messages</strong>
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" id="messages" style="display: none;overflow:scroll;height:250px;">
+
+                    </ul>
+                </li>
+                <li class="dropdown" onclick="$('#log-menu').slideToggle('slow')">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">
+                        <strong class="faa-parent animated-hover"><i class='fa fa-user-o faa-flash'></i>profilo</strong>
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" id="log-menu">
+                        <li>
+                            <a href="/users/{{ request.user.id }}/">
+                                <strong class="">View Your profile</strong>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/getagrip/help/">
+                                <strong class="">Help</strong>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/getagrip/help/">
+                                <strong class="">Feed Back</strong>
+                            </a>
+                        </li>
+                        <li role="separator" class="divider"></li>
+                        <li class="">
+                            <a href="/Logout/">
+                                <strong class="">Logout</strong>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+<br><br><br>
+
+{% if user %}
+    <div class="container-fluid">
+        <div class="container-fluid">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    {% if user == request.user %}
+                        <a href="delete" class="pull-right"><span class="fa fa-recycle fa-2x"></span></a>
+                        <a href="update" class="pull-right"><span class="fa fa-edit fa-2x"></span></a>
+                    {% endif %}
+                    <h2><strong>User Profile</strong> <a href="#"><b><span
+                            class="fa fa-user-secret"></span>{{ user.username }}</b></a>
+                    </h2>
+                </div>
+                <div class="panel-body">
+                    <div class="list-group">
+                        <a class="list-group-item">
+                            <b class="list-group-item-heading"><i class="fa fa-anchor"></i>First Name</b>
+                            <p class="list-group-item-text badge">{{ user.first_name }}</p>
+                        </a>
+                        <a class="list-group-item">
+                            <b class="list-group-item-heading"><i class="fa fa-bolt"></i>Last Name</b>
+                            <p class="list-group-item-text badge">{{ user.last_name }}</p>
+                        </a>
+                        <a class="list-group-item">
+                            <b class="list-group-item-heading"><i class="fa fa-child"></i>User Name
+                                <small>(Provided)</small>
+                            </b>
+                            <div class="chip badge">
+                                <img src="http://www.iconskid.com/images/60/it-support-correct-group-60914.png" alt="Person" class="img-circle" width="30" height="30">
+                                {{ user.username }}
+                            </div>
+                        </a>
+                        <a class="list-group-item">
+                            <b class="list-group-item-heading"><i class="fa fa-envelope-open"></i>Email
+                                <small>(Provided)</small>
+                            </b>
+                            <p class="list-group-item-text badge alert-info">{{ user.email }}</p>
+
+                        </a>
+                        <a class="list-group-item">
+                            <b class="list-group-item-heading"><i class="fa fa-user-md"></i>Is Staff
+                                <small>(admin)</small>
+                            </b>
+                            {% if user.is_staff %}
+                                <p class="list-group-item-text badge alert-success">
+                                    <i class="fa fa-graduation-cap"></i>Admin
+                                </p>
+                            {% else %}
+                                <p class="list-group-item-text badge alert-danger">
+                                    <i class="fa fa-graduation-cap"></i>Member
+                                </p>
+                            {% endif %}
+
+                        </a>
+                        <a class="list-group-item">
+                            <b class="list-group-item-heading"><i class="fa fa-free-code-camp"></i>State
+                                <small>(current)</small>
+                            </b>
+                            {% if user.is_active %}
+                                <p class="list-group-item-text badge alert-success">
+                                    <i class="fa fa-coffee"></i>Active
+                                </p>
+                            {% else %}
+                                <p class="list-group-item-text badge alert-danger">
+                                    <i class="fa fa-exclamation-circle"></i>Inactive
+                                </p>
+                            {% endif %}
+                        </a>
+                        <a class="list-group-item">
+                            <b class="list-group-item-heading"><i class="fa fa-hourglass-2"></i>Last LoggedIn</b>
+                            <p class="list-group-item-text">
+                                <input class="form-control" type="text" value="{{ user.last_login }}"
+                                       readonly>
+                            </p>
+                        </a>
+                        <a class="list-group-item">
+                            <b class="list-group-item-heading"><i class="fa fa-clock-o"></i>Joined Us On</b>
+                            <p class="list-group-item-text">
+                                <input class="form-control" type="text" value="{{ user.date_joined }}"
+                                       readonly>
+                            </p>
+                        </a>
+                    </div>
+                    <div class="panel-footer">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="card">
+                                    <img src="http://www.iconskid.com/images/60/it-support-correct-group-60914.png" alt="Avatar" style="width:100%">
+                                    <div class="container">
+                                        <h4><b>Get-A-Grip Business Card</b></h4>
+                                        <p>{{ user.first_name }} {{ user.last_name }}-
+                                            <small>{{ user.username }}</small>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row container-fluid">
+                <div class="col-sm-6">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h3><strong>Assignees You Have Worked With</strong></h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="list-group" id="workers" style="overflow-y: scroll;height: 200px">
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="panel panel-danger">
+                        <div class="panel-heading">
+                            <h3><strong>Tasks Worked On</strong></h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="list-group" style="overflow-y: scroll;height: 200px">
+                                {% for task in tasks_log_list %}
+                                    <a href="/getagrip/{{ task.id }}" class="list-group-item">
+                                        <h4 class="list-group-item-heading">{{ task.title }}</h4>
+                                        <div class="progress" id="{{ task.id }}-progress-bar"
+                                             onmouseover="fillProgressBars()">
+                                            <div class="progress-bar progress-bar-primary progress-bar-striped active"
+                                                 role="progressbar" aria-valuenow="40" aria-valuemin="0"
+                                                 aria-valuemax="100"
+                                                 style="width: 40%">
+                                                <span class="sr-only">40% Complete (success)</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                {% empty %}
+                                    <label class="alert-danger">There Are No Tasks That You are Working On!</label>
+                                {% endfor %}
+                                <hr>
+                                {% for assignees in assigneed_tasks %}
+
+                                    <a href="/getagrip/{{ assignees.task.id }}" class="list-group-item">
+                                        <h4 class="list-group-item-heading">{{ assignees.task.title }}</h4>
+                                        <div class="progress" id="{{ assignees.task.id }}-progress-bar"
+                                             onmouseover="fillProgressBars()">
+                                            <div class="progress-bar progress-bar-danger progress-bar-striped active"
+                                                 role="progressbar" aria-valuenow="40" aria-valuemin="0"
+                                                 aria-valuemax="100"
+                                                 style="width: 100%">
+                                                No Track
+                                            </div>
+                                        </div>
+                                    </a>
+                                {% empty %}
+                                    <label class="alert-danger">There Are No Tasks That Were Assigned To You By
+                                        Others!</label>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <div class="alert-danger"><h1>You Are Not Allowed Here Bro !!</h1></div>
+{% endif %}
+</body>
+</html>

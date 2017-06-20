@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Users</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <link rel="icon" href="https://www.iconfinder.com/data/icons/objects/512/grip-512.png">
+
+</head>
+<body>
+<div class="container container-fluid">
+    {% if user_list %}
+
+        {% for user in user_list %}
+
+            <div class="panel panel-success">
+                <div class="panel-heading">By
+                    <lable class="alert-info"><strong><a href="/users/{{ user.id }}/">{{ user.username }}</a></strong>
+                    </lable>
+                    at <label>
+                        <small>
+                            <small>-{{ user.last_login }}</small>
+                        </small>
+                    </label>
+                    <lable class="alert-info pull-right">
+                        <small>
+                            <small>click on image for detailed view</small>
+                        </small>
+                    </lable>
+                </div>
+                <div class="panel-title text-center alert alert-info "><b><a href="/users/{{ user.id }}/">
+                    {{ user.first_name }}{{ user.last_name }}</a></b></div>
+
+                <div class="panel-footer alert alert-danger"><label>{{ user.email }}</label></div>
+
+            </div>
+
+        {% endfor %}
+    {% else %}
+        <div class="alert-danger"><h1>You dont have any Entries to see !!</h1></div>
+    {% endif %}
+
+</div>
+</body>
+</html>

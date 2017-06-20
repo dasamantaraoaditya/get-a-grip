@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome-animation/0.0.10/font-awesome-animation.css">
+
+    <link rel="icon" href="https://www.iconfinder.com/data/icons/objects/512/grip-512.png">
+    <title>Get-A-Grip(Help)</title>
+<script>
+        $(document).ready(function () {
+            var movementStrength = 20;
+            var height = movementStrength / $(window).height();
+            var width = movementStrength / $(window).width();
+            $("body").mousemove(function (e) {
+                var pageX = e.pageX - ($(window).width() / 2);
+                var pageY = e.pageY - ($(window).height() / 2);
+                var newvalueX = width * pageX * -1 - 20;
+                var newvalueY = height * pageY * -1 - 20;
+                $('body').css("background-position", newvalueX + "px     " + newvalueY + "px");
+            });
+        });
+    </script>
+<body style="background-image: url('http://cdn.wallpapersafari.com/67/59/9zsMbG.jpg');background-repeat: no-repeat;background-size: auto;">
+<br>
+<div class="container">
+    <div class="panel panel-primary">
+        <div class="panel-heading"><h3><i class="fa fa-heartbeat"></i>Help!</h3></div>
+        <div class="panel-body">
+
+            <h1>Contact</h1>
+            <form role="form" action="" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary btn-lg pull-left">Submit</button>
+                <a href="/getagrip/userTasks"><button type="button" class="btn btn-danger btn-lg pull-right">Cancel</button></a>
+            </form>
+        </div>
+
+        <div class="panel-footer">
+            We will Reach You with in 24Hrs By the Time Of Help Request. Thank You <i class="fa fa-thumbs-o-up"></i>
+            (Get-A-Grip.co.in)
+        </div>
+    </div>
+</div>
+</body>
+</html>
